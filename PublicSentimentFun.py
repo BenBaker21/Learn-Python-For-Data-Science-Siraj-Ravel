@@ -2,6 +2,7 @@ import tweepy
 from textblob import TextBlob
 import os
 import csv
+import sys, getopt
 
 #The first step is authorization with twitter
 consumer_key = 'kiqB6Vx0h9UcUOkddsYa9Cg9w'
@@ -19,25 +20,33 @@ api = tweepy.API(auth)
 #Now can do things like create and delete tweets, or find and twitter users
 
 #Searching for tweets
-public_tweets = api.search("trump")
-score = []
-for tweet in public_tweets:
-	print(tweet.text)
-	analysis = TextBlob(tweet.text)
-	print(analysis.sentiment)
+averagePolarity = []
+averageSubjectivity = []
+for x in range(1, len(sys.argv)):
+	public_tweets = api.search(sys.argv[x])
+	score = []
+	for tweet in public_tweets:
+		print(tweet.text)
+		analysis = TextBlob(tweet.text)
+		print(analysis.sentiment)
+		print("")
+		score.append(analysis.sentiment)
+
+	polarity = 0
+	subjectivity = 0
+
+	for i in range(len(score)):
+		polarity = polarity + score[i].polarity
+		subjectivity = subjectivity + score[i].subjectivity
+
+	averagePolarity.append(polarity/len(score))
+	averageSubjectivity.append(subjectivity/len(score))
+
+
+for k in range(len(averagePolarity)):
+	print("Search: ", sys.argv[k+1])
+	print("Average polarity: ", averagePolarity[k])
+	print("Average subjectivity: ", averageSubjectivity[k])
 	print("")
-	score.append(analysis.sentiment)
-
-polarity = 0
-subjectivity = 0
-
-for i in range(len(score)):
-	polarity = polarity + score[i].polarity
-	subjectivity = subjectivity + score[i].subjectivity
-
-
-
-print("Average polarity: ", polarity/len(score))
-print("Average subjectivity: ", subjectivity/len(score))
 
 #create a labeled tweet dataset in a CSV file
