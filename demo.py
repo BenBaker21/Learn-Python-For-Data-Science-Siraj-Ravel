@@ -19,6 +19,8 @@ clf = clf.fit(X,Y)
 
 #test it by classifying the gender of someone given a new list of body metrics
 
-prediction = clf.predict([190,70,43])
+Z = [[190,70,43]]
+
+prediction = clf.predict(Z)
 
 print prediction
