@@ -18,6 +18,10 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 #Now can do things like create and delete tweets, or find and twitter users
+#Open the csv file and make the csv writer
+csvF = open('sentiments1.csv', 'a')
+csvW = csv.writer(csvF)
+
 
 #Searching for tweets
 averagePolarity = []
@@ -26,11 +30,41 @@ for x in range(1, len(sys.argv)):
 	public_tweets = api.search(sys.argv[x])
 	score = []
 	for tweet in public_tweets:
-		print(tweet.text)
 		analysis = TextBlob(tweet.text)
-		print(analysis.sentiment)
-		print("")
 		score.append(analysis.sentiment)
+		csvW.writerow([tweet.created_at])
+		if analysis.sentiment.polarity >= 0 and analysis.sentiment.polarity < .30:
+			csvW.writerow("Slightly positive tweet")
+
+		elif analysis.sentiment.polarity > -.30 and analysis.sentiment.polarity < 0:
+			csvW.writerow("Slightly negative tweet")
+
+		elif analysis.sentiment.polarity >= .30 and analysis.sentiment.polarity <= 1:
+			csvW.writerow("Very positive tweet")
+
+		elif analysis.sentiment.polarity >= -1 and analysis.sentiment.polarity <= -.30:
+			csvW.writerow("Very negative tweet")
+
+		if analysis.sentiment.subjectivity >= 0 and analysis.sentiment.subjectivity < .30:
+			csvW.writerow("Slight subjectivity")
+
+		elif analysis.sentiment.subjectivity > -.30 and analysis.sentiment.subjectivity < 0:
+			csvW.writerow("Slightly negative subjectivity")
+
+		elif analysis.sentiment.subjectivity >= .30 and analysis.sentiment.subjectivity <= 1:
+			csvW.writerow("Very subjective")
+
+		elif analysis.sentiment.subjectivity >= -1 and analysis.sentiment.subjectivity <= -.30:
+			csvW.writerow("Very negative subjectivity")
+
+		csvW.writerow([analysis])
+		csvW.writerow([analysis.sentiment])
+		csvW.writerow("")
+		#print(tweet.created_at)
+		#print(tweet.text) 
+		#print(analysis)
+		#print (analysis.sentiment)
+		#print("")
 
 	polarity = 0
 	subjectivity = 0
@@ -43,10 +77,36 @@ for x in range(1, len(sys.argv)):
 	averageSubjectivity.append(subjectivity/len(score))
 
 
+csvF.close()
+
 for k in range(len(averagePolarity)):
-	print("Search: ", sys.argv[k+1])
+	print("Search: " + sys.argv[k+1])
 	print("Average polarity: ", averagePolarity[k])
+	if averagePolarity[k] >= 0 and averagePolarity[k] < .30:
+		print("Slightly positive average polarity")
+
+	elif averagePolarity[k] > -.30 and averagePolarity[k] < 0:
+		print("Slightly negative average polarity")
+
+	elif averagePolarity[k] >= .30 and averagePolarity[k] <= 1:
+		print("Very positive average polarity")
+
+	elif averagePolarity[k] >= -1 and averagePolarity[k] <= -.30:
+		print("Very negative average polarity")
+
 	print("Average subjectivity: ", averageSubjectivity[k])
+	if averageSubjectivity[k] >= 0 and averageSubjectivity[k] < .30:
+		print("Slightly positive average subjectivity")
+
+	elif averageSubjectivity[k] > -.30 and averageSubjectivity[k] < 0:
+		print("Slightly negative average subjectivity")
+
+	elif averageSubjectivity[k] >= .30 and averageSubjectivity[k] <= 1:
+		print("Very positive average subjectivity")
+
+	elif averageSubjectivity[k] >= -1 and averageSubjectivity[k] <= -.30:
+		print("Very negative average subjectivity")
+
 	print("")
 
 #create a labeled tweet dataset in a CSV file
