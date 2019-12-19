@@ -54,9 +54,3 @@ def sample_recommendation(model, data, user_ids):
 			print("			%s" % x)
 
 sample_recommendation(model, data, [3, 25, 450])
-
-
-
-
-
-
