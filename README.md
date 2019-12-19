@@ -11,7 +11,7 @@ Program uses the tweepy library to access Twitter's API, and the TextBlob librar
 
 
 ##Movie Recommendation System (recommendationSystem.py)
-
+Code uses the fetch_movielens method of lightfm to get the Movielens dataset of 100,000 interactions from 1000 users on 1700 movies, and the warp (weighted approximate-rank pairwise) loss function from lightfm. Uses the movies people already like, their known positives, to produce a top 3 movie recommendation list.
 
 
 
